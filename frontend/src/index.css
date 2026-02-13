@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+body {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #F5F7FA;
+    border-color: #334155;
+    /* Soft light gray background */
+    color: #1A1A1A;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark body {
+    background-color: #111827;
+    /* Dark background */
+    color: #F9FAFB;
+    /* Light text */
+    border-color: #4B5563;
+}
+
+.dark .bg-white {
+    background-color: #1F2937;
+    /* Darker card background */
+}
+
+.dark .text-gray-900 {
+    color: #F9FAFB;
+}
+
+.dark .text-gray-700 {
+    color: #D1D5DB;
+}
+
+.dark .text-gray-500 {
+    color: #9CA3AF;
+}
+
+.dark .bg-gray-50 {
+    background-color: #374151;
+    /* Even darker for inputs/sections */
+}
+
+.dark .border-gray-100 {
+    border-color: #374151;
+}
+
+.dark .bg-gray-100 {
+    background-color: #4B5563;
+}
+
+.dark .text-gray-400 {
+    color: #9CA3AF;
+}
+
+.dark .text-gray-800 {
+    color: #F3F4F6;
+}
+
+.dark input {
+    background-color: #374151;
+    color: #F9FAFB;
+    border-color: #4B5563;
+}
+
+.dark button.bg-gray-100 {
+    background-color: #374151;
+    color: #F9FAFB;
+}
+
+.dark .bg-white\/60 {
+    background-color: rgba(31, 41, 55, 0.6);
+}
+
+.dark .bg-white\/70 {
+    background-color: rgba(31, 41, 55, 0.7);
+}
+
+.dark .bg-gray-50\/50 {
+    background-color: rgba(55, 65, 81, 0.5);
+}
+
+.dark input:focus {
+    border-color: #63b0b8;
+    outline: 2px solid #63b0b8;
+    outline-offset: 1px;
+}
