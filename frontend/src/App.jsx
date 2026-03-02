@@ -12,6 +12,8 @@ import LandingPage from './pages/LandingPage';
 import Welcome from './pages/Welcome';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import WhatsAppNumberPopup from './components/WhatsAppNumberPopup';
+
 
 import LoadingScreen from './components/LoadingScreen';
 import ForgotPassword from './pages/ForgotPassword';
@@ -19,11 +21,21 @@ import ResetPassword from './pages/ResetPassword';
 import AdminDashboard from './pages/AdminDashboard';
 
 const PrivateRoute = ({ children }) => {
-    const { token, loading } = useContext(AuthContext);
+    const { token, loading, user } = useContext(AuthContext);
 
     if (loading) return <LoadingScreen />;
 
-    return token ? children : <Navigate to="/login" />;
+    if (!token) return <Navigate to="/login" />;
+
+    // Logic: Mandatory WhatsApp Number check
+    const hasWhatsApp = !!(user?.whatsappNumber && user.whatsappNumber.toString().trim().length > 0);
+
+    return (
+        <>
+            {children}
+            {!hasWhatsApp && <WhatsAppNumberPopup />}
+        </>
+    );
 };
 
 const PublicRoute = ({ children }) => {

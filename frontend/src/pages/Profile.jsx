@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
-import { User, Mail, Calendar, Shield, LogOut, Camera, ChevronRight, Settings, Bell, Save, X, Lock, Moon, Globe, Check, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Phone, Calendar, Shield, LogOut, Camera, ChevronRight, Settings, Bell, Save, X, Lock, Moon, Globe, Check, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig';
 import { useTranslation } from 'react-i18next';
@@ -58,7 +58,8 @@ const Profile = () => {
     const [formData, setFormData] = useState({
         name: user?.name || '',
         email: user?.email || '',
-        avatar: user?.avatar || ''
+        avatar: user?.avatar || '',
+        whatsappNumber: user?.whatsappNumber || ''
     });
     const [passData, setPassData] = useState({
         currentPassword: '',
@@ -88,7 +89,12 @@ const Profile = () => {
         if (token) fetchStats();
         if (token) fetchStats();
         if (user) {
-            setFormData({ name: user.name, email: user.email, avatar: user.avatar });
+            setFormData({
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                whatsappNumber: user.whatsappNumber || ''
+            });
             setPhotoPreview(user.avatar || '');
         }
     }, [token, user]);
@@ -281,12 +287,27 @@ const Profile = () => {
                                         className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 font-bold text-gray-900 focus:outline-none focus:border-[#63b0b8] focus:ring-1 focus:ring-[#63b0b8]"
                                     />
                                 </div>
+                                <div>
+                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 mb-1 block text-left">WhatsApp Number</label>
+                                    <input
+                                        type="tel"
+                                        value={formData.whatsappNumber}
+                                        onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                                        className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 font-bold text-gray-900 focus:outline-none focus:border-[#63b0b8] focus:ring-1 focus:ring-[#63b0b8]"
+                                        placeholder="10-digit number"
+                                    />
+                                </div>
                                 <div className="flex gap-3 mt-4">
                                     <button
                                         type="button"
                                         onClick={() => {
                                             setIsEditing(false);
-                                            setFormData({ name: user.name, email: user.email, avatar: user.avatar });
+                                            setFormData({
+                                                name: user.name,
+                                                email: user.email,
+                                                avatar: user.avatar,
+                                                whatsappNumber: user.whatsappNumber || ''
+                                            });
                                             setPhotoPreview(user.avatar || '');
                                         }}
                                         className="flex-1 py-3 bg-gray-100 text-gray-500 rounded-2xl font-bold hover:bg-gray-200 transition-colors"
@@ -307,6 +328,10 @@ const Profile = () => {
                                 <p className="text-gray-400 font-bold flex items-center justify-center gap-2 mt-1">
                                     <Mail className="w-4 h-4" />
                                     {user.email}
+                                </p>
+                                <p className="text-[#63b0b8] font-bold flex items-center justify-center gap-2 mt-1 text-sm">
+                                    <Phone className="w-3.5 h-3.5" />
+                                    WhatsApp: {user.whatsappNumber}
                                 </p>
                             </div>
                         )}

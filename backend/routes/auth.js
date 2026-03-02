@@ -173,29 +173,29 @@ router.get('/user', auth, async (req, res) => {
 // @desc    Update user profile
 // @access  Private
 router.put('/user', auth, async (req, res) => {
-    const { name, email, avatar } = req.body;
+    const { name, email, avatar, whatsappNumber } = req.body;
 
-    // Build user object to update
+
     const userFields = {};
-    if (name) userFields.name = name;
-    if (email) userFields.email = email;
-    if (avatar) userFields.avatar = avatar;
+    if (name !== undefined) userFields.name = name;
+    if (email !== undefined) userFields.email = email;
+    if (avatar !== undefined) userFields.avatar = avatar;
+    if (whatsappNumber !== undefined) userFields.whatsappNumber = whatsappNumber;
 
     try {
-        let user = await User.findById(req.user.id);
-
-        if (!user) return res.status(404).json({ msg: 'User not found' });
-
-        // Update
-        user = await User.findByIdAndUpdate(
+        const user = await User.findByIdAndUpdate(
             req.user.id,
             { $set: userFields },
-            { new: true }
+            { new: true, runValidators: true }
         ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
 
         res.json(user);
     } catch (err) {
-        console.error(err.message);
+        console.error("Error in profile update route:", err.message);
         res.status(500).send('Server Error');
     }
 });

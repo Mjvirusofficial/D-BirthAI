@@ -74,55 +74,58 @@ const Dashboard = () => {
     // Filter and Calculate days
     // Process all birthdays first to add metadata
     const processedBirthdays = birthdays.map(birthday => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const birthDate = new Date(birthday.date);
-        const thisYear = today.getFullYear();
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const birthDate = new Date(birthday.date);
+            if (!birthDate || isNaN(birthDate.getTime())) return null;
 
-        let nextBirthday = new Date(thisYear, birthDate.getMonth(), birthDate.getDate());
-        if (nextBirthday < today) {
-            nextBirthday = new Date(thisYear + 1, birthDate.getMonth(), birthDate.getDate());
+            const thisYear = today.getFullYear();
+            let nextBirthday = new Date(thisYear, birthDate.getMonth(), birthDate.getDate());
+            if (nextBirthday < today) {
+                nextBirthday = new Date(thisYear + 1, birthDate.getMonth(), birthDate.getDate());
+            }
+
+            const diffTime = nextBirthday - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // Age Calculation
+            let ageYears = today.getFullYear() - birthDate.getFullYear();
+            let lastBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            if (today < lastBirthday) ageYears--;
+
+            // Calculate age days precisely
+            let previousBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            if (today < previousBirthday) {
+                previousBirthday = new Date(today.getFullYear() - 1, birthDate.getMonth(), birthDate.getDate());
+            }
+            const ageDays = Math.floor((today - previousBirthday) / (1000 * 60 * 60 * 24));
+
+            return {
+                id: birthday._id,
+                name: birthday.name,
+                whatsapp: birthday.whatsapp,
+                dateRaw: birthDate,
+                date: birthDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+                age: { years: ageYears, days: ageDays },
+                relationship: birthday.relationship,
+                category: birthday.category,
+                days: diffDays,
+                photo: birthday.photo,
+                color: diffDays === 0 ? 'from-[#EC4899]/10 to-[#EC4899]/5' : 'from-[#63b0b8]/10 to-[#63b0b8]/5',
+                borderColor: 'border-[#63b0b8]/20',
+                iconColor: 'text-[#63b0b8]'
+            };
+        } catch (e) {
+            console.error("Processing error for birthday:", birthday, e);
+            return null;
         }
-
-        const diffTime = nextBirthday - today;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        // Age Calculation
-        let ageYears = today.getFullYear() - birthDate.getFullYear();
-        let lastBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-
-        if (today < lastBirthday) {
-            ageYears--;
-        }
-
-        // Calculate age days precisely
-        let previousBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-        if (today < previousBirthday) {
-            previousBirthday = new Date(today.getFullYear() - 1, birthDate.getMonth(), birthDate.getDate());
-        }
-        const ageDays = Math.floor((today - previousBirthday) / (1000 * 60 * 60 * 24));
-
-        return {
-            id: birthday._id,
-            name: birthday.name,
-            whatsapp: birthday.whatsapp,
-            dateRaw: birthDate,
-            date: birthDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
-            age: { years: ageYears, days: ageDays },
-            relationship: birthday.relationship,
-            category: birthday.category,
-            days: diffDays,
-            photo: birthday.photo,
-            color: diffDays === 0 ? 'from-[#EC4899]/10 to-[#EC4899]/5' : 'from-[#63b0b8]/10 to-[#63b0b8]/5',
-            borderColor: 'border-[#63b0b8]/20',
-            iconColor: 'text-[#63b0b8]'
-        };
-    });
+    }).filter(b => b !== null);
 
     // 1. Get One Nearest Upcoming Birthday (Global)
-    const upcomingBirthday = processedBirthdays
-        .slice()
-        .sort((a, b) => a.days - b.days)[0];
+    const upcomingBirthday = processedBirthdays.length > 0
+        ? processedBirthdays.slice().sort((a, b) => a.days - b.days)[0]
+        : null;
 
     // 2. Filter and Sort for List
     const filteredBirthdays = processedBirthdays
@@ -131,7 +134,6 @@ const Dashboard = () => {
                 (b.relationship && b.relationship.toLowerCase().includes(searchQuery.toLowerCase()));
             if (selectedCategory === 'All') return matchesSearch;
             const matchesCategory = b.category === selectedCategory;
-
             if (searchQuery) return matchesSearch;
             return matchesCategory;
         })
