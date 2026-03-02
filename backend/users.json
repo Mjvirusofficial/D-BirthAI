@@ -1,0 +1,43 @@
+[
+  {
+    "_id": "698ec8710566d9915a3c6400",
+    "name": "Hisaab",
+    "email": "hisaab204@gmail.com",
+    "password": "$2b$10$utFcM0Xrad7Tal/tJ9rPmeP3xdwyn85JBNycmxE6CEYPcAbtPKpHS",
+    "avatar": "",
+    "isAdmin": false,
+    "createdAt": "2026-02-13T06:45:05.964Z",
+    "__v": 0
+  },
+  {
+    "_id": "698ed84338254f47560feef1",
+    "name": "Mj Virus",
+    "email": "deepakravidas565@gmail.com",
+    "password": "$2b$10$xw133FLBuM1yWRsDxvY1de9O8y4cxNOv5jGgzfsfMuD9t8xuzrJ6S",
+    "avatar": "",
+    "isAdmin": false,
+    "createdAt": "2026-02-13T07:52:35.689Z",
+    "__v": 0,
+    "whatsappNumber": "9999999999"
+  },
+  {
+    "_id": "698ed97b38254f47560fef0e",
+    "name": "Sagar Kumar",
+    "email": "sagarkumar20077sk@gmail.com",
+    "password": "$2b$10$3sokZDFKLFIuXjb6rkDhF.VijOtEwEZSOP.J7U1Z/0paliaJqXssS",
+    "avatar": "",
+    "isAdmin": false,
+    "createdAt": "2026-02-13T07:57:47.069Z",
+    "__v": 0
+  },
+  {
+    "_id": "69a302f1cdb5bbec4b237e29",
+    "name": "Deepak Ravidas",
+    "email": "deepak.ravidas7061@gmail.com",
+    "password": "$2b$10$OOt1RdBaFSPbNmcFegOSFO6fRbnDlfFXWIIJ9Kqf.4hWhyGkyBNOy",
+    "avatar": "",
+    "isAdmin": false,
+    "createdAt": "2026-02-28T15:00:01.446Z",
+    "__v": 0
+  }
+]
