@@ -90,124 +90,97 @@ const WhatsAppNumberPopup = ({ overrideView = false }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/20"
+                className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-[4px] bg-black/40"
             >
-                <div className="absolute inset-0 z-0 bg-transparent overflow-hidden pointer-events-none">
-                    <motion.div
-                        animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
-                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#63b0b8]/30 rounded-full blur-[100px]"
-                    />
-                    <motion.div
-                        animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }}
-                        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                        className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-[#A855F7]/20 rounded-full blur-[120px]"
-                    />
-                </div>
-
                 <motion.div
-                    initial={{ scale: 0.9, opacity: 0, y: 30 }}
-                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                    exit={{ scale: 0.8, opacity: 0, y: 30 }}
-                    className="relative z-10 w-full max-w-md bg-white border border-gray-100/50 shadow-[0_32px_100px_rgba(0,0,0,0.1)] rounded-[40px] p-8 md:p-10 overflow-hidden"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    className="relative z-10 w-full max-w-[320px] p-[3px] overflow-hidden rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.3),0_0_20px_rgba(99,176,184,0.2)]"
                 >
-                    {/* Progress Bar or Status */}
-                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-50 overflow-hidden">
-                        {updating && (
-                            <motion.div
-                                initial={{ x: '-100%' }}
-                                animate={{ x: '100%' }}
-                                transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                                className="w-1/2 h-full bg-[#63b0b8]"
-                            />
-                        )}
-                    </div>
+                    {/* Rotating Border Animation Overlay */}
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-[-150%] bg-[conic-gradient(from_0deg,#63b0b8,#A855F7,#FDE047,#63b0b8)] opacity-100"
+                    />
 
-                    <div className="text-center">
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", damping: 10, stiffness: 200, delay: 0.2 }}
-                            className="bg-teal-50 w-20 h-20 rounded-[28px] flex items-center justify-center mx-auto mb-6 shadow-sm"
-                        >
-                            <Phone className="w-10 h-10 text-[#63b0b8] stroke-[2.5px]" />
-                        </motion.div>
-
-                        <h2 className="text-3xl font-black text-gray-900 tracking-tighter mb-3 leading-tight">
-                            Verify Your <span className="text-[#63b0b8]">WhatsApp</span>
-                        </h2>
-                        <p className="text-gray-400 font-bold text-sm tracking-tight mb-8 leading-relaxed max-w-[280px] mx-auto">
-                            Add your number to receive timely <br /> birthday reminders automatically.
-                        </p>
-
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="flex bg-gray-50 border border-gray-100 rounded-[24px] overflow-hidden focus-within:ring-2 focus-within:ring-[#63b0b8]/20 focus-within:border-[#63b0b8] transition-all duration-300">
-                                <div className="bg-white border-r border-gray-100 px-4 py-4 flex items-center">
-                                    <select
-                                        className="appearance-none bg-transparent outline-none font-bold text-gray-700 cursor-pointer pr-1"
-                                        value={countryCode}
-                                        onChange={(e) => setCountryCode(e.target.value)}
-                                    >
-                                        {countryCodes.map(c => (
-                                            <option key={c.code} value={c.code}>{c.flag} +{c.code}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <input
-                                    type="tel"
-                                    placeholder="Enter 10-digit number"
-                                    className="flex-1 px-5 py-5 bg-transparent outline-none font-bold text-gray-900 placeholder:text-gray-300 tracking-[0.1em]"
-                                    value={whatsappNumber}
-                                    onChange={(e) => setWhatsappNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                                    autoFocus
-                                />
+                    <div className="relative z-10 bg-white rounded-[30px] p-6 w-full h-full">
+                        <div className="flex flex-col items-center text-center">
+                            <div className="w-14 h-14 bg-[#25D366]/10 rounded-2xl flex items-center justify-center mb-4">
+                                <svg viewBox="0 0 24 24" className="w-8 h-8 fill-[#25D366]">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.432 5.633 1.433h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg>
                             </div>
 
-                            <AnimatePresence mode="wait">
-                                {error && (
-                                    <motion.div
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        className="text-red-500 font-bold text-xs bg-red-50 py-3 rounded-2xl"
-                                    >
-                                        {error}
-                                    </motion.div>
-                                )}
-                                {successMessage && (
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="text-green-600 font-bold text-sm bg-green-50 py-4 rounded-3xl flex items-center justify-center gap-2"
-                                    >
-                                        <CheckCircle className="w-5 h-5" />
-                                        {successMessage}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                            <h3 className="text-xl font-black text-gray-900 mb-2 tracking-tight">WhatsApp Alert</h3>
+                            <p className="text-[13px] text-gray-500 mb-6 font-bold leading-relaxed px-2">
+                                Get birthday reminders directly on your <span className="text-[#25D366]">whatsapp</span>
+                            </p>
 
-                            {!successMessage && (
-                                <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    type="submit"
-                                    disabled={updating || whatsappNumber.length !== 10}
-                                    className={`w-full py-5 rounded-[24px] font-black text-lg transition-all duration-300 shadow-xl flex items-center justify-center gap-3 ${whatsappNumber.length === 10
-                                        ? 'bg-gray-900 text-white shadow-gray-200'
-                                        : 'bg-gray-100 text-gray-400 shadow-none cursor-not-allowed'
-                                        }`}
-                                >
-                                    {updating ? 'Verifying...' : 'Integrate Now'}
-                                    <ArrowRight className="w-5 h-5" />
-                                </motion.button>
-                            )}
-                        </form>
-                    </div>
+                            <form onSubmit={handleSubmit} className="w-full space-y-4">
+                                <div className="flex bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#25D366]/30 transition-all">
+                                    <div className="px-3 py-3 border-r border-gray-100 bg-gray-100/50">
+                                        <select
+                                            className="bg-transparent outline-none font-bold text-xs text-gray-700"
+                                            value={countryCode}
+                                            onChange={(e) => setCountryCode(e.target.value)}
+                                        >
+                                            {countryCodes.map(c => (
+                                                <option key={c.code} value={c.code}>+{c.code}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        placeholder="Phone number"
+                                        className="flex-1 px-3 py-3 bg-transparent outline-none font-bold text-sm text-gray-800 placeholder:text-gray-300"
+                                        value={whatsappNumber}
+                                        onChange={(e) => setWhatsappNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                                    />
+                                </div>
 
-                    <div className="mt-8 text-center">
-                        <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest leading-relaxed">
-                            Secured and Encrypted <br /> Integration
-                        </p>
+                                <AnimatePresence mode="wait">
+                                    {error && (
+                                        <motion.p
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className="text-red-500 text-[10px] font-bold text-center bg-red-50 py-2 rounded-lg"
+                                        >
+                                            {error}
+                                        </motion.p>
+                                    )}
+                                    {successMessage && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="text-emerald-600 font-bold text-xs bg-emerald-50 py-2.5 rounded-xl flex items-center justify-center gap-2 border border-emerald-100"
+                                        >
+                                            <CheckCircle className="w-4 h-4" />
+                                            {successMessage}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {!successMessage && (
+                                    <button
+                                        type="submit"
+                                        disabled={updating || whatsappNumber.length !== 10}
+                                        className={`w-full py-3.5 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 ${whatsappNumber.length === 10
+                                            ? 'bg-[#25D366] text-white hover:bg-[#128C7E] shadow-xl shadow-[#25D366]/30'
+                                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                            }`}
+                                    >
+                                        {updating ? 'Saving...' : 'Get Updates'}
+                                        {!updating && <ArrowRight className="w-4 h-4" />}
+                                    </button>
+                                )}
+                            </form>
+
+                            <p className="mt-5 text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                                Secure • Encrypted • Private
+                            </p>
+                        </div>
                     </div>
                 </motion.div>
             </motion.div>

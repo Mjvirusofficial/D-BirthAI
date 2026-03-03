@@ -204,17 +204,11 @@ router.put('/user', auth, async (req, res) => {
 // @desc    Change user password
 // @access  Private
 router.put('/password', auth, async (req, res) => {
-    const { currentPassword, newPassword } = req.body;
+    const { newPassword } = req.body;
 
     try {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ msg: 'User not found' });
-
-        // Check current password
-        const isMatch = await bcrypt.compare(currentPassword, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid current password' });
-        }
 
         // Hash new password
         const salt = await bcrypt.genSalt(10);
