@@ -65,8 +65,8 @@ const Navbar = () => {
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-8">
-                        <div className="flex items-center gap-6">
+                    <div className="hidden md:flex items-center gap-6">
+                        <div className="flex items-center gap-6 pr-4 border-r border-gray-100">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.path}
@@ -87,28 +87,39 @@ const Navbar = () => {
                             ))}
                         </div>
 
-                        <div className="h-6 w-px bg-gray-100 mx-2" />
-
                         {user ? (
                             <div className="flex items-center gap-4">
-                                <Link to="/add-birthday">
+                                <Link to="/add-birthday" className="flex items-center">
                                     <motion.button
                                         whileHover={{ scale: 1.05, y: -2 }}
                                         whileTap={{ scale: 0.95 }}
-                                        className="bg-gradient-to-r from-[#63b0b8] to-[#63b0b8]/80 text-white px-5 py-2.5 rounded-xl transition-all shadow-md shadow-[#63b0b8]/20 font-bold text-sm flex items-center gap-2"
+                                        className="bg-[#63b0b8] text-white px-5 py-2.5 rounded-xl transition-all shadow-md shadow-teal-500/20 font-bold text-sm flex items-center gap-2 group/btn"
                                     >
-                                        <PlusCircle className="w-4 h-4" />
+                                        <PlusCircle className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" />
                                         Add Birthday
                                     </motion.button>
                                 </Link>
 
-                                <div className="flex items-center gap-3 bg-gray-50 pl-2 pr-1 py-1 rounded-xl border border-gray-100">
-                                    <span className="text-gray-700 text-xs font-bold pl-2">Hi, {user.name.split(' ')[0]}</span>
+                                <div className="flex items-center gap-3 bg-gray-50/50 p-1 pr-1.5 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group/user">
+                                    <Link to="/profile" className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-white shadow-sm border border-gray-100 flex items-center justify-center overflow-hidden">
+                                            {user.avatar ? (
+                                                <img src={user.avatar} className="w-full h-full object-cover" alt="Avatar" />
+                                            ) : (
+                                                <User className="w-4 h-4 text-gray-400" />
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-gray-700 text-[11px] font-black leading-none">Hi, {user.name.split(' ')[0]}</span>
+                                            <span className="text-gray-400 text-[9px] font-bold">My Account</span>
+                                        </div>
+                                    </Link>
+                                    <div className="w-px h-4 bg-gray-200 mx-1" />
                                     <motion.button
-                                        whileHover={{ scale: 1.1, backgroundColor: '#fee2e2' }}
+                                        whileHover={{ scale: 1.1, color: '#ef4444' }}
                                         whileTap={{ scale: 0.9 }}
                                         onClick={logout}
-                                        className="p-2 text-red-500 rounded-lg transition-colors hover:text-red-600"
+                                        className="p-1.5 text-gray-400 transition-colors"
                                         title="Logout"
                                     >
                                         <LogOut className="w-4 h-4" />

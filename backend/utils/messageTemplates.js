@@ -7,8 +7,28 @@ const generateWhatsAppLink = (number, message) => {
     return `https://wa.me/${formattedNumber}?text=${encodeURIComponent(message)}`;
 };
 
+const shayaris = [
+    "*Khushi se beete har din, har suhani raat ho,* 🌟\n*Jis taraf aapke kadam pade, wahan phoolon ki barsaat ho.* 🌸✨",
+    "*Tamannao se bhari ho zindagi, khwahisho se bhara ho har pal,* 🌈\n*Daman bhi chhota lagne lage, itni khushiyan de aapko aane wala kal.* 🎈🎊",
+    "*Aasman ki bulandiyon par naam ho aapka,* 🚀\n*Chand ki darti par mukam ho aapka, hum toh rehte hai chhoti si duniya mein,* 🌍\n*Par khuda kare saara jahan ho aapka.* 👑💎",
+    "*Zindagi ki har khushi aapke kadam chume,* 💝\n*Har dua aapki qubool ho jaye, aap rahe hamesha khushhal,* 😊\n*Yehi meri dil se dua hai aapke liye.* 🙏🌹",
+    "*Phoolon ne amrit ka jaam bheja hai,* 🍹\n*Suraj ne gagan se pranam bheja hai,* ☀️\n*Mubarak ho aapko naya janm-din,* 🍰\n*Hamne dil se ye paigham bheja hai.* ❤️💌"
+];
+
+const getRandomShayari = () => {
+    return shayaris[Math.floor(Math.random() * shayaris.length)];
+};
+
 module.exports = {
-    adminWish: (userName, birthdayName) => `Happy Birthday ${birthdayName}! 🎂\n\n${userName} has scheduled this special surprise for you via D-BirthAI.\nHave a great year ahead! 🎉`,
+    adminWish: (userName, senderNumber, birthdayName) => {
+        const shayari = getRandomShayari();
+        // Format sender number for link
+        let cleanNumber = senderNumber.replace(/\D/g, '');
+        if (cleanNumber.length === 10) cleanNumber = '91' + cleanNumber;
+        const waLink = `https://wa.me/${cleanNumber}`;
+
+        return `*Happy Birthday ${birthdayName}!* 🎂🎁\n\n${shayari}\n\n*${userName}:* 👇\n${waLink}\n\n_Powered by D-BirthAI_ 🚀`;
+    },
 
     userReminderEmail: (userName, birthdayName, link) => `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
@@ -37,7 +57,7 @@ module.exports = {
         </div>
     `,
 
-    userReminderWhatsApp: (userName, birthdayName, link) => `Hey ${userName}! 👋\n\n🎉 It's *${birthdayName}'s* Birthday Today! 🎂\n\n✅ We have already sent a scheduled wish on your behalf.\n\nNow it's your turn! Click below to wish them personally: 👇\n${link}\n\n_Powered by D-BirthAI_`,
+    userReminderWhatsApp: (userName, birthdayName) => `*Hey ${userName}!* 👋\n\n*🎉 Humne ${birthdayName} ko aapke behalf par automated birthday wish bhej diya hai!* ✅\n\n*Ab aap chaho toh unka status laga sakte ho!* 📸\n\n*Agar aap achy se video edit kar ke wish karna chahte ho toh yahan se contact karein:* 👇\nhttps://www.instagram.com/0ye_its_deepak\n\n_Powered by D-BirthAI_ 🚀`,
 
     generateWhatsAppLink
 };

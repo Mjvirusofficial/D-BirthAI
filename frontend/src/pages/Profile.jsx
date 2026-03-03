@@ -1,13 +1,15 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
+import { NotificationContext } from '../context/NotificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
-import { User, Mail, Phone, Calendar, Shield, LogOut, Camera, ChevronRight, Settings, Bell, Save, X, Lock, Moon, Globe, Check, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { User, Mail, Phone, Calendar, Shield, LogOut, Camera, ChevronRight, Settings, Bell, Save, X, Lock, Moon, Globe, Check, Eye, EyeOff, Trash2, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig';
 import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
     const { user, logout, token, fetchUser, loading } = useContext(AuthContext);
+    const { showNotification } = useContext(NotificationContext);
     const navigate = useNavigate();
     const topRef = useRef(null); // Reference for scrolling to top
 
@@ -126,20 +128,20 @@ const Profile = () => {
             if (response.ok) {
                 await fetchUser(token);
                 setIsEditing(false);
-                alert('Profile updated successfully!');
+                showNotification('Profile updated successfully!', 'success');
             } else {
-                alert('Failed to update profile');
+                showNotification('Failed to update profile', 'error');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Error updating profile');
+            showNotification('Error updating profile', 'error');
         }
     };
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         if (passData.newPassword !== passData.confirmPassword) {
-            alert("New passwords don't match!");
+            showNotification("New passwords don't match!", 'error');
             return;
         }
 
@@ -158,15 +160,15 @@ const Profile = () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.msg);
+                showNotification(data.msg || 'Password updated successfully!', 'success');
                 setShowSecurity(false);
-                setPassData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                setPassData({ newPassword: '', confirmPassword: '' });
             } else {
-                alert(data.msg || 'Failed to update password');
+                showNotification(data.msg || 'Failed to update password', 'error');
             }
         } catch (error) {
             console.error('Error updating password:', error);
-            alert('Error updating password');
+            showNotification('Error updating password', 'error');
         }
     };
 
@@ -183,13 +185,13 @@ const Profile = () => {
             });
             if (response.ok) {
                 await fetchUser(token);
-                alert("WhatsApp number removed successfully.");
+                showNotification("WhatsApp number removed successfully.", 'success');
             } else {
-                alert("Failed to remove WhatsApp number.");
+                showNotification("Failed to remove WhatsApp number.", 'error');
             }
         } catch (error) {
             console.error("Error removing whatsapp:", error);
-            alert("Error removing whatsapp number.");
+            showNotification("Error removing whatsapp number.", 'error');
         }
     };
 
@@ -235,7 +237,8 @@ const Profile = () => {
     if (!user) return null;
 
     return (
-        <div ref={topRef} className="min-h-screen bg-white pt-28 pb-20 px-4 font-sans relative overflow-hidden">
+        <div ref={topRef} className="min-h-screen bg-white pt-4 pb-20 px-4 font-sans relative overflow-hidden">
+
             {/* Background Decorations */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <motion.div
@@ -255,8 +258,20 @@ const Profile = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white/70 backdrop-blur-2xl border border-white/80 rounded-[40px] p-8 shadow-2xl shadow-gray-200/50 mb-8"
+                    className="bg-white/70 backdrop-blur-2xl border border-white/80 rounded-[40px] p-8 shadow-2xl shadow-gray-200/50 mb-8 relative"
                 >
+                    {/* Back Button inside card */}
+                    <div className="absolute top-6 left-6 z-20">
+                        <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => navigate('/dashboard')}
+                            className="p-2.5 bg-gray-50/50 hover:bg-white shadow-sm border border-gray-100 rounded-xl text-gray-600 hover:text-gray-900 transition-all"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </motion.button>
+                    </div>
+
                     <div className="flex flex-col items-center text-center space-y-4">
                         <div className="relative group cursor-pointer" onClick={() => document.getElementById('avatarInput').click()}>
                             <motion.div

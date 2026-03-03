@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { NotificationContext } from '../context/NotificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Camera, Calendar, Clock, Sparkles, Heart, Gift, User, Phone, ChevronDown } from 'lucide-react';
 import API_BASE_URL from '../apiConfig';
 
 const AddBirthday = () => {
     const navigate = useNavigate();
+    const { showNotification } = useContext(NotificationContext);
     const [formData, setFormData] = useState({
         name: '',
         whatsapp: '',
@@ -13,7 +16,7 @@ const AddBirthday = () => {
         category: '',
         relationship: '',
         reminder: true,
-        reminderTime: '09:00',
+        reminderTime: '00:00',
         reminderDays: '0',
         amPm: 'AM'
     });
@@ -83,14 +86,14 @@ const AddBirthday = () => {
 
         // Validation
         if (!formData.name || !formData.whatsapp || !formData.date || !formData.category || !formData.relationship) {
-            alert('Please fill in all required fields!');
+            showNotification('Please fill in all required fields!', 'error');
             return;
         }
 
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('Please login first!');
+                showNotification('Please login first!', 'error');
                 navigate('/login');
                 return;
             }
@@ -121,14 +124,14 @@ const AddBirthday = () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert('Birthday saved successfully! 🎉');
+                showNotification('Birthday saved successfully! 🎉', 'success');
                 navigate('/dashboard');
             } else {
-                alert(data.message || 'Failed to save birthday');
+                showNotification(data.message || 'Failed to save birthday', 'error');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error saving birthday. Please try again!');
+            showNotification('Error saving birthday. Please try again!', 'error');
         }
     };
 

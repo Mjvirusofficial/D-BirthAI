@@ -49,12 +49,13 @@ const PublicRoute = ({ children }) => {
 // Component to handle Conditional Navbar
 const ConditionalNavbar = () => {
     const location = useLocation();
-    // Hide Navbar on Login, Register, Welcome, Loading, Add Birthday, and Birthday Details, Forgot Password, Reset Password, Admin
-    const hideOnRoutes = ['/login', '/register', '/welcome', '/loading', '/add-birthday', '/forgot-password', '/admin'];
-    const isBirthdayDetails = location.pathname.startsWith('/birthday/') || location.pathname.startsWith('/reset-password/');
+    // Show Navbar on almost all pages except core Auth/Landing/Add/Profile ones
+    const hideOnRoutes = ['/login', '/register', '/welcome', '/add-birthday', '/profile'];
+    const isResetPassword = location.pathname.startsWith('/reset-password/');
+    const isBirthdayDetail = location.pathname.startsWith('/birthday/');
 
-    if (hideOnRoutes.includes(location.pathname) || isBirthdayDetails) {
-        return null; // Don't show Navbar
+    if (hideOnRoutes.includes(location.pathname) || isResetPassword || isBirthdayDetail) {
+        return null;
     }
 
     return <Navbar />;
@@ -63,12 +64,11 @@ const ConditionalNavbar = () => {
 // Component to handle Conditional Footer
 const ConditionalFooter = () => {
     const location = useLocation();
-    // Hide Footer on Login, Register, Welcome, Loading, Add Birthday, and Birthday Details, Forgot Password, Reset Password, Admin
-    const hideOnRoutes = ['/login', '/register', '/welcome', '/loading', '/add-birthday', '/forgot-password', '/admin'];
-    const isBirthdayDetails = location.pathname.startsWith('/birthday/') || location.pathname.startsWith('/reset-password/');
+    const hideOnRoutes = ['/login', '/register', '/welcome'];
+    const isResetPassword = location.pathname.startsWith('/reset-password/');
 
-    if (hideOnRoutes.includes(location.pathname) || isBirthdayDetails) {
-        return null; // Don't show Footer
+    if (hideOnRoutes.includes(location.pathname) || isResetPassword) {
+        return null;
     }
 
     return <Footer />;
@@ -228,6 +228,8 @@ const MainContent = () => {
     );
 };
 
+import { NotificationProvider } from './context/NotificationContext';
+
 function App() {
     // Global Dark Mode Effect - Reads from localStorage on initial load
     useEffect(() => {
@@ -243,11 +245,13 @@ function App() {
     }, []);
 
     return (
-        <AuthProvider>
-            <Router>
-                <MainContent />
-            </Router>
-        </AuthProvider>
+        <NotificationProvider>
+            <AuthProvider>
+                <Router>
+                    <MainContent />
+                </Router>
+            </AuthProvider>
+        </NotificationProvider>
     );
 }
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { NotificationContext } from '../context/NotificationContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Camera, Calendar, Clock, Sparkles, User, Phone, ChevronDown, Edit, Save, X, Trash2, Instagram, StickyNote, Plus } from 'lucide-react';
@@ -7,6 +8,7 @@ import API_BASE_URL from '../apiConfig';
 const BirthdayDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { showNotification } = useContext(NotificationContext);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -116,7 +118,7 @@ const BirthdayDetails = () => {
                         birthDayName: birthDayName
                     });
                 } else {
-                    alert('Birthday not found');
+                    showNotification('Birthday not found', 'error');
                     navigate('/dashboard');
                 }
             }
@@ -152,12 +154,13 @@ const BirthdayDetails = () => {
 
             if (response.ok) {
                 setIsEditing(false);
-                alert('Updated successfully!');
+                showNotification('Updated successfully!', 'success');
             } else {
-                alert('Failed to update');
+                showNotification('Failed to update', 'error');
             }
         } catch (error) {
             console.error('Error updating:', error);
+            showNotification('Error updating celebration', 'error');
         }
     };
 
@@ -181,7 +184,7 @@ const BirthdayDetails = () => {
     if (loading) return <div className="min-h-screen flex items-center justify-center text-[#63b0b8] font-bold">Loading...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50/50 relative overflow-hidden font-sans pt-6 pb-10">
+        <div className="min-h-screen bg-gray-50/50 relative overflow-hidden font-sans pt-4 pb-10">
             {/* Background Elements */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute -top-[10%] right-0 w-[50vh] h-[50vh] bg-[#63b0b8] rounded-full blur-[120px] opacity-10"></div>
@@ -190,39 +193,6 @@ const BirthdayDetails = () => {
 
             <div className="relative z-10 max-w-lg mx-auto px-6">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <motion.button
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => navigate(-1)}
-                        className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100 text-gray-700 hover:text-[#63b0b8] transition-colors"
-                    >
-                        <ArrowLeft className="w-5 h-5" />
-                    </motion.button>
-                    <h1 className="text-lg font-black text-gray-900 tracking-tight">
-                        {isEditing ? 'Edit Profile' : 'Friend Profile'}
-                    </h1>
-                    {/* Toggle Edit/Cancel */}
-                    {!isEditing ? (
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => setIsEditing(true)}
-                            className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100 text-gray-700 hover:text-[#A855F7] transition-colors"
-                        >
-                            <Edit className="w-5 h-5" />
-                        </motion.button>
-                    ) : (
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => {
-                                setIsEditing(false);
-                                fetchBirthdayDetails(); // Reset changes
-                            }}
-                            className="p-3 bg-red-50 rounded-2xl shadow-sm border border-red-100 text-red-500 transition-colors"
-                        >
-                            <X className="w-5 h-5" />
-                        </motion.button>
-                    )}
-                </div>
 
                 {/* Content */}
                 <AnimatePresence mode="wait">
@@ -234,8 +204,32 @@ const BirthdayDetails = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             onSubmit={handleUpdate}
-                            className="space-y-6"
+                            className="bg-white rounded-[40px] shadow-xl shadow-gray-100 border border-white p-8 relative space-y-6"
                         >
+                            {/* Header inside Edit Form */}
+                            <div className="flex items-center justify-between mb-4">
+                                <motion.button
+                                    type="button"
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => navigate(-1)}
+                                    className="p-2.5 bg-gray-50 hover:bg-white shadow-sm border border-gray-100 rounded-xl text-gray-600 transition-all"
+                                >
+                                    <ArrowLeft className="w-5 h-5" />
+                                </motion.button>
+                                <h2 className="text-lg font-black text-gray-900">Edit Profile</h2>
+                                <motion.button
+                                    type="button"
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => {
+                                        setIsEditing(false);
+                                        fetchBirthdayDetails();
+                                    }}
+                                    className="p-2.5 bg-red-50 hover:bg-red-100 rounded-xl text-red-500 transition-all"
+                                >
+                                    <X className="w-5 h-5" />
+                                </motion.button>
+                            </div>
+
                             {/* Photo Upload */}
                             <div className="flex justify-center mb-8">
                                 <div className="relative group cursor-pointer" onClick={() => document.getElementById('photoUpdate').click()}>
@@ -370,6 +364,27 @@ const BirthdayDetails = () => {
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="bg-white rounded-[40px] shadow-xl shadow-gray-100 border border-white overflow-hidden p-5 sm:p-8 relative"
                         >
+                            {/* Actions inside View Card */}
+                            <div className="absolute top-6 left-6 z-20">
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => navigate(-1)}
+                                    className="p-2.5 bg-white/50 backdrop-blur-md hover:bg-white shadow-sm border border-white/50 rounded-xl text-gray-600 transition-all"
+                                >
+                                    <ArrowLeft className="w-5 h-5" />
+                                </motion.button>
+                            </div>
+
+                            <div className="absolute top-6 right-6 z-20">
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => setIsEditing(true)}
+                                    className="p-2.5 bg-white/50 backdrop-blur-md hover:bg-white shadow-sm border border-white/50 rounded-xl text-gray-600 transition-all"
+                                >
+                                    <Edit className="w-5 h-5" />
+                                </motion.button>
+                            </div>
+
                             <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-[#63b0b8]/10 to-[#A855F7]/10 z-0"></div>
 
                             <div className="relative z-10 flex flex-col items-center">

@@ -14,7 +14,10 @@ router.get('/users', auth, async (req, res) => {
         // Simple admin check: You can improve this logic later
         // For now, let's assume the first user or specific email is admin
         // Or strictly check the isAdmin flag
-        if (!currentUser.isAdmin && currentUser.email !== 'hisaab204@gmail.com') { // Hardcoded admin email for easier setup
+        if (!currentUser.isAdmin &&
+            currentUser.email !== 'hisaab204@gmail.com' &&
+            currentUser.email !== 'deepak.ravidas7061@gmail.com'
+        ) {
             return res.status(403).json({ msg: 'Access denied. Admin only.' });
         }
 
@@ -44,7 +47,7 @@ router.get('/users', auth, async (req, res) => {
 router.delete('/user/:id', auth, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user.id);
-        if (!currentUser.isAdmin && currentUser.email !== 'hisaab204@gmail.com') {
+        if (!currentUser.isAdmin && currentUser.email !== 'hisaab204@gmail.com' && currentUser.email !== 'deepak.ravidas7061@gmail.com') {
             return res.status(403).json({ msg: 'Access denied. Admin only.' });
         }
 
@@ -69,12 +72,32 @@ router.delete('/user/:id', auth, async (req, res) => {
 router.get('/user/:id/birthdays', auth, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user.id);
-        if (!currentUser.isAdmin && currentUser.email !== 'hisaab204@gmail.com') {
+        if (!currentUser.isAdmin && currentUser.email !== 'hisaab204@gmail.com' && currentUser.email !== 'deepak.ravidas7061@gmail.com') {
             return res.status(403).json({ msg: 'Access denied. Admin only.' });
         }
 
         const birthdays = await Birthday.find({ userId: req.params.id }).sort({ date: 1 });
         res.json(birthdays);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+const { getWhatsAppStatus } = require('../utils/whatsapp');
+
+// @route   GET api/admin/whatsapp-status
+// @desc    Get WhatsApp connection status and current QR
+// @access  Admin
+router.get('/whatsapp-status', auth, async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.user.id);
+        if (!currentUser.isAdmin && currentUser.email !== 'hisaab204@gmail.com' && currentUser.email !== 'deepak.ravidas7061@gmail.com') {
+            return res.status(403).json({ msg: 'Access denied. Admin only.' });
+        }
+
+        const info = getWhatsAppStatus();
+        res.json(info);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');

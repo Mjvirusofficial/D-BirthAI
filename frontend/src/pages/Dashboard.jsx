@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { NotificationContext } from '../context/NotificationContext';
 import { AuthContext } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Search, Mic, Calendar, Gift, Star, Clock, ChevronRight, ChevronLeft, Cake, Trash2 } from 'lucide-react';
@@ -8,6 +9,7 @@ import API_BASE_URL from '../apiConfig';
 
 const Dashboard = () => {
     const { user } = useContext(AuthContext);
+    const { showNotification } = useContext(NotificationContext);
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
@@ -62,12 +64,13 @@ const Dashboard = () => {
 
             if (response.ok) {
                 setBirthdays(birthdays.filter(b => b._id !== id));
+                showNotification('Birthday deleted successfully', 'success');
             } else {
-                alert('Failed to delete');
+                showNotification('Failed to delete', 'error');
             }
         } catch (error) {
             console.error('Error deleting birthday:', error);
-            alert('Error deleting birthday');
+            showNotification('Error deleting birthday', 'error');
         }
     };
 
@@ -267,7 +270,7 @@ const Dashboard = () => {
                                             const url = `https://wa.me/${upcomingBirthday.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
                                             window.open(url, '_blank');
                                         } else {
-                                            alert('No WhatsApp number found for this contact.');
+                                            showNotification('No WhatsApp number found for this contact.', 'error');
                                         }
                                     }}
                                     className="bg-[#63b0b8] text-white text-[10px] sm:text-sm font-black px-4 sm:px-6 py-2.5 sm:py-3 rounded-[16px] sm:rounded-2xl shadow-lg shadow-teal-500/20 hover:shadow-teal-500/40 transition-all border border-white/20 whitespace-nowrap ml-2"
